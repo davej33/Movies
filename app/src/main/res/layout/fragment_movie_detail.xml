@@ -1,0 +1,86 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#333"
+    tools:context="com.example.android.movieapp2.MovieDetailFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="180dp"
+        android:layout_height="240dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/movie_title"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Cars 3"
+        app:layout_constraintLeft_toRightOf="@+id/imageView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/release_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(2017)"
+        app:layout_constraintLeft_toLeftOf="@+id/movie_title"
+        app:layout_constraintRight_toRightOf="@+id/movie_title"
+        app:layout_constraintTop_toBottomOf="@+id/movie_title" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:isIndicator="true"
+        android:rating="3.5"
+        android:scaleX=".5"
+        android:scaleY=".5"
+        app:layout_constraintLeft_toLeftOf="@+id/movie_title"
+        app:layout_constraintRight_toRightOf="@+id/movie_title"
+        app:layout_constraintTop_toTopOf="@+id/release_year" />
+
+
+    <ScrollView
+        android:layout_width="151dp"
+        android:layout_height="156dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintLeft_toRightOf="@+id/imageView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ratingBar"
+        app:layout_constraintVertical_bias="1.0" >
+
+        <TextView
+            android:id="@+id/plot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="As the Piston Cup season progresses, Lightning McQueen and his fellow veteran racers find themselves overshadowed by Jackson Storm, an arrogant racer who is part of a new generation who use the latest technology to boost their performance. As more and more next generation cars begin racing, the older racers gradually retire or are fired by their sponsors. During the final race of the season, Lightning tries to overtake Storm, but loses control and suffers a violent rollover crash.  "
+            />
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>
