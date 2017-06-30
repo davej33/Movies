@@ -14,10 +14,12 @@ public final class MovieIntentService extends IntentService {
      */
     public MovieIntentService() {
         super("MovieIntentService");
+//        Log.w("IntentService", "Service run");
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+
         SyncTask.syncData(getApplicationContext());
     }
 }

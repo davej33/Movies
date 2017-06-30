@@ -36,6 +36,7 @@ public final class SyncTask {
         }catch (SQLException e) {
             Log.i("SyncTask", "SQL error: " + e );
         }
+
         try {
             Cursor cursor = context.getContentResolver().query(MovieContract.MovieEntry.MOVIE_TABLE_URI,
                     null, null, null, null);

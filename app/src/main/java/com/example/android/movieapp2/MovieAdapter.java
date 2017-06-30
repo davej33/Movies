@@ -34,9 +34,9 @@ public final class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieV
     public MovieAdapter(Context context, int width, int height, ListItemClickListener listener) {
         mContext = context;
         mImageHeight = height;
-        Log.w(LOG_TAG, "Image Height: " + height);
+        Log.w(LOG_TAG, "2. Image Height: " + height);
         mImageWidth = width;
-        Log.w(LOG_TAG, "Image Width: " + width);
+        Log.w(LOG_TAG, "3. Image Width: " + width);
         mOnClickListener = listener;
 
     }
@@ -130,11 +130,16 @@ public final class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieV
 
     @Override
     public int getItemCount() {
-        if (sCursor == null) return 0;
+        if (sCursor == null) {
+//            Log.w(LOG_TAG, "Count = " + 0);
+            return 0;
+        }
+//        Log.w(LOG_TAG, "Count = " + sCursor.getCount());
         return sCursor.getCount();
     }
 
     public void swapCursor(Cursor cursor) {
+        Log.w(LOG_TAG, "Swap Cursor run");
         sCursor = cursor;
         notifyDataSetChanged();
     }

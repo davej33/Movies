@@ -30,7 +30,8 @@ public final class NetworkUtils {
 
         SharedPreferences pref = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(context);
         String sort = pref.getString(context.getString(R.string.pref_sort_key), context.getString(R.string.pref_sort_default));
-
+        Log.i(LOG_TAG, "Sort: " + sort);
+        
         // build URI using sharedPreferences
         Uri uri = Uri.parse(context.getString(R.string.network_query_base_url)).buildUpon()
                 .appendQueryParameter(context.getString(R.string.pref_sort_key), sort)

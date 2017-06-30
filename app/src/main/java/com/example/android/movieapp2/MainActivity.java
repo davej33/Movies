@@ -43,13 +43,17 @@ MovieAdapter.ListItemClickListener{
         // get image dimensions
         int imageWidth = getWindowWidth();
         int imageHeight = (int) (imageWidth * 1.5);
-        Log.w(LOG_TAG, "h / w " + imageHeight + " / " + imageWidth);
+        Log.w(LOG_TAG, "1. h / w " + imageHeight + " / " + imageWidth);
+
 
         // setup shared preferences
         setupSharedPreferences();
+        setAdapterItemSize(imageWidth, imageHeight);
 
         // intitiate and/or display data
-        if (SyncUtils.sIsInitialed) {
+        Log.w(LOG_TAG, "1a. sIsInitialized = " + SyncUtils.sIsInitialed);
+        Log.w(LOG_TAG, "1b. isInitialized() = " + SyncUtils.isInitialized());
+        if (SyncUtils.isInitialized()) {
             displayData();
         } else {
             SyncUtils.initialize(this);
@@ -86,8 +90,14 @@ MovieAdapter.ListItemClickListener{
     }
 
     private void displayData() {
-        Log.i(LOG_TAG,"Display Data Test");
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        Log.i(LOG_TAG,"4. Display Data Test");
+        if(getSupportLoaderManager().getLoader(LOADER_ID)!=null){
+            Log.i(LOG_TAG,"Restart Loader");
+            getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+        } else {
+            Log.i(LOG_TAG,"Init Loader");
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        }
     }
 
     @Override
@@ -101,6 +111,7 @@ MovieAdapter.ListItemClickListener{
         int id = item.getItemId();
         switch(id){
             case R.id.action_settings:
+                Log.w(LOG_TAG,"Settings intent ack");
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             default:
@@ -120,7 +131,7 @@ MovieAdapter.ListItemClickListener{
         data.moveToFirst();
         int col = data.getColumnIndex(MovieContract.MovieEntry.MOVIE_TITLE);
         String title = data.getString(col);
-        Log.w(LOG_TAG, "Cursor title: " + title); // check movie title of first movie item in cursor
+        Log.w(LOG_TAG, "Load Finished - Cursor title: " + title); // check movie title of first movie item in cursor
         mAdapter.swapCursor(data);
 
     }
@@ -152,16 +163,23 @@ MovieAdapter.ListItemClickListener{
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.w(LOG_TAG, "SP-Changed");
+//        int count = 0;
+//        if(count == 0){
+//            count++;
+//            );
+//        } else {
+
         SyncUtils.syncImmediately(this);
-        getSupportLoaderManager().destroyLoader(LOADER_ID);
-        displayData();
-        startActivity(new Intent(this, MainActivity.class));
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                displayData();
-//            }
-//        },1000);
+//        getSupportLoaderManager().destroyLoader(LOADER_ID);
+//        displayData();
+//        startActivity(new Intent(this, MainActivity.class));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                displayData();
+            }
+        },1000);
     }
 
     @Override
@@ -172,4 +190,9 @@ MovieAdapter.ListItemClickListener{
 
         startActivity(intent);
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//    }
 }
