@@ -1,5 +1,6 @@
 package com.example.android.movieapp2;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +13,11 @@ public class DetailsActivity extends AppCompatActivity implements MovieDetailFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("movieId");
+        Log.i("DetailsActivity", "MovieID from Intent: " + id);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.detail_container, new MovieDetailFragment()).commit();
+                .add(R.id.detail_container, new MovieDetailFragment().newInstance(id)).commit();
     }
 
     @Override

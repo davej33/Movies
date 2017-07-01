@@ -26,7 +26,7 @@ public final class SyncTask {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i("SyncTask", "cv size " + cv.length );
+//        Log.i("SyncTask", "cv size " + cv.length );
         try {
             if (cv != null && cv.length > 0) {
                 int rowsDeleted = context.getContentResolver().delete(MovieContract.MovieEntry.MOVIE_TABLE_URI, null, null);
@@ -43,8 +43,12 @@ public final class SyncTask {
             cursor.moveToFirst();
             int col = cursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_TITLE);
             String s = cursor.getString(col);
+
+            int colID = cursor.getColumnIndex(MovieContract.MovieEntry._ID);
+            String sId = cursor.getString(colID);
+
             cursor.close();
-            Log.w("SyncTask", "DB movie #1 = " + s);
+            Log.w("SyncTask", "DB movie #1 = " + s + " id: " + sId);
         }catch(SQLException e){
             Log.i("SyncTask", "SQL error 2: " + e);
         }

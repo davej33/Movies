@@ -10,6 +10,7 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.Log;
 import android.view.MenuItem;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -18,9 +19,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_settings);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-//        ActionBar bar = getActionBar();
-//        if (bar != null) bar.setDisplayHomeAsUpEnabled(true);
+        ActionBar bar = getActionBar();
+        if (bar != null) bar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -40,7 +40,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public static class PreferenceFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
+
+
+    public static class PreferenceFragment extends PreferenceFragmentCompat
+            implements SharedPreferences.OnSharedPreferenceChangeListener{
 
         private void setPreferenceSummary(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -78,6 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Log.i("Prefs", "onSharedPrefChanged Run");
             Preference preference = findPreference(key);
             if (null != preference) {
                 if (!(preference instanceof CheckBoxPreference)) {

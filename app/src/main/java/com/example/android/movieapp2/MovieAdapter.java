@@ -34,17 +34,23 @@ public final class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieV
     public MovieAdapter(Context context, int width, int height, ListItemClickListener listener) {
         mContext = context;
         mImageHeight = height;
-        Log.w(LOG_TAG, "2. Image Height: " + height);
         mImageWidth = width;
-        Log.w(LOG_TAG, "3. Image Width: " + width);
         mOnClickListener = listener;
 
     }
 
+//    private void setAdapterItemSize(int imageWidth, int imageHeight){
+//        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.item_relative_layout);
+//        relativeLayout.getLayoutParams().height = imageHeight;
+//        relativeLayout.getLayoutParams().width = imageWidth;
+//    }
+//
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // inflate item layout in a view
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item_layout, parent, false);
+        view.getLayoutParams().height = mImageHeight;
+        view.getLayoutParams().width = mImageWidth;
 
         // create holder using view
         MovieViewHolder holder = new MovieViewHolder(view);
@@ -142,6 +148,13 @@ public final class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieV
         Log.w(LOG_TAG, "Swap Cursor run");
         sCursor = cursor;
         notifyDataSetChanged();
+    }
+
+    public String getSelectedMovieDbID(int cursorIndexNum){
+        sCursor.moveToPosition(cursorIndexNum);
+
+        int idCol = sCursor.getColumnIndex(MovieContract.MovieEntry._ID);
+        return sCursor.getString(idCol);
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

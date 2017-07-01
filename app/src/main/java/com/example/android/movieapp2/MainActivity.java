@@ -48,7 +48,7 @@ MovieAdapter.ListItemClickListener{
 
         // setup shared preferences
         setupSharedPreferences();
-        setAdapterItemSize(imageWidth, imageHeight);
+
 
         // intitiate and/or display data
         Log.w(LOG_TAG, "1a. sIsInitialized = " + SyncUtils.sIsInitialed);
@@ -82,6 +82,7 @@ MovieAdapter.ListItemClickListener{
 //        Log.i(LOG_TAG, "Is Initiated = " + SyncUtils.isInitialized());
 
     }
+
 
     private void setupSharedPreferences() {
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -130,8 +131,8 @@ MovieAdapter.ListItemClickListener{
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
         int col = data.getColumnIndex(MovieContract.MovieEntry.MOVIE_TITLE);
-        String title = data.getString(col);
-        Log.w(LOG_TAG, "Load Finished - Cursor title: " + title); // check movie title of first movie item in cursor
+//        String title = data.getString(col);
+//        Log.w(LOG_TAG, "Load Finished - Cursor title: " + title); // check movie title of first movie item in cursor
         mAdapter.swapCursor(data);
 
     }
@@ -186,8 +187,9 @@ MovieAdapter.ListItemClickListener{
     public void onListItemClick(int clickedItemIndex) {
         Toast.makeText(this, "Index Number: " + clickedItemIndex, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, DetailsActivity.class);
-
-
+        String movieID = mAdapter.getSelectedMovieDbID(clickedItemIndex);
+        Log.i(LOG_TAG, "adapter itemID = " + movieID);
+        intent.putExtra("movieId", movieID);
         startActivity(intent);
     }
 

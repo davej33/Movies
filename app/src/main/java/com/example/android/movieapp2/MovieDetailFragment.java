@@ -1,12 +1,22 @@
 package com.example.android.movieapp2;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.android.movieapp2.data.MovieContract;
+import com.example.android.movieapp2.data.MovieDbHelper;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -17,15 +27,12 @@ import android.view.ViewGroup;
  * Use the {@link MovieDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MovieDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class MovieDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+    // the fragment initialization parameters
+    private static final String ARG_MOVIE_ID = "movieId";
+    private String mMovieID;
+    private MovieDbHelper mDbHelper;
+    private static Cursor sCursor;
 
     private OnFragmentInteractionListener mListener;
 
@@ -37,16 +44,13 @@ public class MovieDetailFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MovieDetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MovieDetailFragment newInstance(String param1, String param2) {
+    public static MovieDetailFragment newInstance(String movieID) {
         MovieDetailFragment fragment = new MovieDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_MOVIE_ID, movieID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,15 +59,56 @@ public class MovieDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mMovieID = getArguments().getString(ARG_MOVIE_ID);
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         // Inflate the layout for this fragment
+//        Toast.makeText(getContext(), "Movie Id from Frag: " + mMovieID, Toast.LENGTH_LONG).show();
+        String[] selectionArgs = {mMovieID};
+        mDbHelper = new MovieDbHelper(getContext());
+        sCursor = mDbHelper.getReadableDatabase().query(MovieContract.MovieEntry.MOVIE_TABLE,
+                null, MovieContract.MovieEntry.MOVIE_ID, selectionArgs, null, null, null);
+
+        // get poster image url
+        int posterColId = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_POSTER);
+        String posterUrl = sCursor.getString(posterColId);
+
+        // get title
+        int titleColId = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_TITLE);
+        String title = sCursor.getString(titleColId);
+        TextView titleTV = (TextView) view.findViewById(R.id.movie_title);
+        titleTV.setText(title);
+//        Log.i(LOG_TAG, "Title: " + title);
+
+        int tmdbIdCol = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_TMDB_ID);
+        int tmdbId = sCursor.getInt(tmdbIdCol);
+
+
+        int idCol = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_ID);
+        int id = sCursor.getInt(idCol);
+
+        ImageView posterView = (ImageView) view.findViewById(R.id.cover_image);
+        // picasso library to fetch and display images
+        Picasso.with(getContext())
+                .load(posterUrl)
+                .error(R.drawable.error)
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .resize(400, 600)
+                .placeholder(R.drawable.placeholder)
+                .centerCrop()
+                .into(posterView);
+
         return inflater.inflate(R.layout.fragment_movie_detail, container, false);
     }
 
