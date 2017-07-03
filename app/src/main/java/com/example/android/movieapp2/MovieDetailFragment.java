@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import com.example.android.movieapp2.data.MovieDbHelper;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +31,7 @@ import com.squareup.picasso.Picasso;
  * Use the {@link MovieDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MovieDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MovieDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // the fragment initialization parameters
     private static final String ARG_MOVIE_ID = "movieId";
     private String mMovieID;
@@ -71,34 +75,33 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         // Inflate the layout for this fragment
-//        Toast.makeText(getContext(), "Movie Id from Frag: " + mMovieID, Toast.LENGTH_LONG).show();
-        String[] selectionArgs = {mMovieID};
-        mDbHelper = new MovieDbHelper(getContext());
-        sCursor = mDbHelper.getReadableDatabase().query(MovieContract.MovieEntry.MOVIE_TABLE,
-                null, MovieContract.MovieEntry.MOVIE_ID, selectionArgs, null, null, null);
+        View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        // get poster image url
-        int posterColId = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_POSTER);
-        String posterUrl = sCursor.getString(posterColId);
+        // instantiate views
 
-        // get title
+        // get and set title
         int titleColId = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_TITLE);
         String title = sCursor.getString(titleColId);
-        TextView titleTV = (TextView) view.findViewById(R.id.movie_title);
-        titleTV.setText(title);
-//        Log.i(LOG_TAG, "Title: " + title);
 
-        int tmdbIdCol = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_TMDB_ID);
-        int tmdbId = sCursor.getInt(tmdbIdCol);
+        titleTV.setText(title);
+        Log.i("DetailFrag", "Title: " + title);
+
+        int releaseDateCol = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_RELEASE_DATE);
+        int releaseDate = sCursor.getInt(releaseDateCol);
+        String relDateString = "(" + String.valueOf(releaseDate) + ")";
+        TextView releaseDateView = (TextView) view.findViewById(R.id.release_year);
+        releaseDateView.setText(relDateString);
 
 
         int idCol = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_ID);
         int id = sCursor.getInt(idCol);
 
-        ImageView posterView = (ImageView) view.findViewById(R.id.cover_image);
+        // get and set poster image url
+        int posterColId = sCursor.getColumnIndex(MovieContract.MovieEntry.MOVIE_POSTER);
+        String posterUrl = sCursor.getString(posterColId);
+        Log.i("DetailFrag", "PosterURL: " + posterUrl);
+        ImageView posterView = (ImageView) view.findViewById(R.id.poster_detail_view);
         // picasso library to fetch and display images
         Picasso.with(getContext())
                 .load(posterUrl)
@@ -134,6 +137,21 @@ public class MovieDetailFragment extends Fragment implements LoaderManager.Loade
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     /**
